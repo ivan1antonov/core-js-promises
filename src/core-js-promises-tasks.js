@@ -22,7 +22,7 @@ function getPromise(number) {
     if (number >= 0) {
       resolve(number);
     } else {
-      reject(new Error('Number is not possitive'));
+      reject(number);
     }
   });
 }
@@ -113,11 +113,11 @@ function getAllOrNothing(promises) {
  * [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)]  => Promise fulfilled with [1, null, 3]
  */
 function getAllResult(promises) {
-  return Promise.all(
-    promises.map((promise) => {
-      return promise.then((value) => value).catch(() => null);
-    })
-  );
+  return new Promise((resolve) => {
+    Promise.allSettled(promises).then((res) =>
+      resolve(res.map((el) => (el.status === 'fulfilled' ? el.value : null)))
+    );
+  });
 }
 
 /**
