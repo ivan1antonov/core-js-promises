@@ -138,12 +138,12 @@ function getAllResult(promises) {
  * [promise1, promise4, promise3] => Promise.resolved('104030')
  * [promise1, promise4, promise3, promise2] => Promise.resolved('10403020')
  */
-function queuPromises(promises) {
-  return promises.reduce((el, acc) => {
-    return el.then((resolveString) => {
-      return acc.then((value) => resolveString + String(value));
-    });
-  }, Promise.resolve(''));
+function queuePromises(promises) {
+  return promises.reduce(
+    (acc, promise) =>
+      acc.then((res) => promise.then((value) => `${res}${value}`)),
+    Promise.resolve('')
+  );
 }
 
 module.exports = {
@@ -153,5 +153,5 @@ module.exports = {
   getFirstPromiseResult,
   getAllOrNothing,
   getAllResult,
-  queuPromises,
+  queuePromises,
 };
